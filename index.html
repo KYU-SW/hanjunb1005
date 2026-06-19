@@ -10,14 +10,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
     
     <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
         :root {
-            /* 건양대학교 메인 그린 컬러 톤 적용 */
-            --primary-color: #005a3c; 
-            --primary-light: #007a52;
-            --primary-dark: #003d29;
+            /* 조금 더 진한 연두색 테마 적용 */
+            --primary-color: #51cf66; 
+            --primary-light: #8ce99a;
+            --primary-dark: #2f9e44;
             --text-color: #333333;
             --text-light: #666666;
-            --bg-color: #f4f7f6;
+            --bg-color: #f8fff0;
             --white: #ffffff;
             --transition: all 0.3s ease;
         }
@@ -65,6 +69,7 @@
             list-style: none;
             display: flex;
             gap: 20px;
+            gap: 15px;
         }
 
         .nav-links a {
@@ -74,11 +79,13 @@
             padding: 8px 16px;
             border-radius: 20px;
             transition: var(--transition);
+            display: inline-block; /* transform 효과가 잘 적용되도록 설정 */
         }
 
         .nav-links a:hover {
             background-color: var(--bg-color);
             color: var(--primary-color);
+            transform: translateY(-3px); /* 위로 살짝 올라가는 효과 추가 */
         }
 
         .nav-links a.active {
@@ -105,6 +112,16 @@
             margin-bottom: 2rem;
         }
 
+        .hero-img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 4px solid var(--white);
+            margin-bottom: 1.5rem;
+            object-fit: cover;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
         .container {
             max-width: 1100px;
             margin: -3rem auto 3rem;
@@ -112,19 +129,24 @@
             position: relative;
         }
 
-        /* About Section */
-        .about-card {
+        /* Section Common Style */
+        .section-card {
             background: var(--white);
             border-radius: 12px;
             padding: 2.5rem;
             box-shadow: 0 10px 30px rgba(0,0,0,0.08);
             margin-bottom: 3rem;
             text-align: center;
+            scroll-margin-top: 100px;
+            min-height: 80vh; /* 섹션이 비어있어도 공간을 차지하게 하여 이동을 확인 가능하게 함 */
         }
 
-        .about-card h2 {
+        .section-card h2 {
             color: var(--primary-color);
             margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         /* Cards Layout (CSS Grid) */
@@ -180,6 +202,44 @@
             font-size: 0.95rem;
         }
 
+        /* Skills & Lists Styles */
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .skill-badge {
+            background: var(--bg-color);
+            color: var(--primary-dark);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 500;
+            border: 1px solid var(--primary-light);
+        }
+
+        .item-list {
+            list-style: none;
+            text-align: left;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .item-list li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .item-list li::before {
+            content: "•";
+            color: var(--primary-color);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
         /* Contact Section */
         .contact-section {
             text-align: center;
@@ -187,6 +247,8 @@
             padding: 3rem;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            scroll-margin-top: 100px;
+            min-height: 80vh;
         }
 
         .contact-links {
@@ -233,6 +295,44 @@
             font-size: 0.9rem;
             border-top: 1px solid #e2e8f0;
         }
+
+        /* 공통 아이템 카드 스타일 및 호버 효과 */
+        .info-card {
+            flex: 1;
+            min-width: 250px;
+            background: var(--white);
+            border: 2px solid var(--primary-light);
+            border-radius: 15px;
+            padding: 2rem 1.5rem;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+            text-align: center;
+        }
+
+        .info-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(81, 207, 102, 0.15);
+            border-color: var(--primary-color);
+        }
+
+        .card-subtitle {
+            display: inline-block;
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 8px 24px;
+            border-radius: 30px;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 10px rgba(81, 207, 102, 0.3);
+        }
+
+        .section-content-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
     </style>
 </head>
 <body>
@@ -243,84 +343,135 @@
         <i class="fa-solid fa-vr-cardboard"></i> DXP Lab
     </a>
     <ul class="nav-links">
-        <li><a href="#" class="active"><i class="fa-solid fa-wand-magic-sparkles"></i> 현재 페이지 (Modern)</a></li>
-        <!-- 이전 페이지 파일명을 old.html 혹은 previous.html 로 맞추어 학생들에게 링크 이동을 시연하시면 됩니다 -->
-        <li><a href="index_initial.html"><i class="fa-solid fa-clock-rotate-left"></i> 이전 페이지 (Basic)</a></li>
+        <li><a href="#home" class="active">Home</a></li> <!-- 나를 소개하는 한 문장, 대표 이미지 -->
+        <li><a href="#about">About Me</a></li> <!-- 자기소개, 소속, 관심 분야, 성격 및 강점 -->
+        <li><a href="#vision">Vision</a></li> <!-- 진로 목표, 되고 싶은 전문가상 -->
+        <li><a href="#courses">Courses</a></li> <!-- 현재 수강 중인 강의 -->
+        <li><a href="#projects">Projects</a></li> <!-- 현재 수행 중인 프로젝트, 역할, 결과물 -->
+        <li><a href="#skills">Skills</a></li> <!-- 현재 사용 가능하거나 학습 중인 도구와 기술 -->
+        <li><a href="#activities">Activities</a></li> <!-- 동아리, 특강, 비교과, 공모전, 발표 경험 -->
+        <li><a href="#contact">Contact</a></li> <!-- 이메일, GitHub, 블로그, SNS 등 -->
     </ul>
 </nav>
 
-<!-- Hero Section -->
-<header class="hero">
-    <h1>Hanseob Kim</h1>
-    <p class="role">Professor & Director of DXP Lab</p>
+<!-- 1. Home Section -->
+<header class="hero" id="home">
+    <img src="LFEWORK.jpeg" alt="HanJun Byun" class="hero-img">
+    <h1>HanJun Byun</h1>
+    <p class="role">"나를 소개하는 대표 문장을 이곳에 입력하세요."</p>
 </header>
 
 <main class="container">
-    <!-- About Section -->
-    <section class="about-card">
+    <!-- 2. About Me Section -->
+    <section class="section-card" id="about">
         <h2><i class="fa-solid fa-user-tie"></i> About Me</h2>
-        <p>
-            인간과 컴퓨터의 상호작용(HCI)을 연구하며, 가상현실(VR) 및 증강현실(AR) 환경에서의 
-            사용자 경험 개선과 <strong>사이버멀미(Cybersickness) 저감 기술</strong>에 집중하고 있습니다. 
-            데이터 전처리 및 분석 역량을 바탕으로 국방(National Defense) 및 의료 등 다양한 도메인을 위한 초실감형 몰입 기술을 탐구합니다.
-        </p>
+        <h3 style="margin: 1.5rem 0; font-size: 1.8rem; color: var(--primary-dark);">"고민보단 고"</h3>
+        
+        <div class="section-content-wrapper">
+            <div class="info-card">
+                <h4 class="card-subtitle">소속</h4>
+                <p style="color: var(--text-light);">건양대학교 국방XR 학부</p>
+            </div>
+            <div class="info-card">
+                <h4 class="card-subtitle">관심 분야</h4>
+                <p style="color: var(--text-light);">미디어 콘텐츠 제작</p>
+            </div>
+            <div class="info-card" style="flex: 1 1 100%; text-align: left;">
+                <h4 class="card-subtitle">성격 및 장점</h4>
+                <div style="margin-top: 1rem; display: grid; gap: 1.5rem;">
+                    <div>
+                        <h5 style="color: var(--primary-dark); font-size: 1.1rem; margin-bottom: 0.3rem;"># 성격</h5>
+                        <p style="color: var(--text-light);">무엇을 하던, 먼저 실행하고 최대한 많은 사람들의 공감을 이끌어내, 친근감 넘치면서도 솔선수범하는 성격입니다.</p>
+                    </div>
+                    <div>
+                        <h5 style="color: var(--primary-dark); font-size: 1.1rem; margin-bottom: 0.3rem;"># 장점</h5>
+                        <p style="color: var(--text-light);">감각있고 창의적인 실행파이면서도 문제 상황에서는 신중하게 판단하고 대처하는 것이 저의 큰 장점입니다.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <h2 class="section-title">Research Interests</h2>
-    
-    <!-- Cards Section -->
-    <section class="card-grid">
-        <!-- Card 1 -->
-        <article class="card">
-            <img src="https://images.unsplash.com/photo-1622979135225-d2ba269cf1ac?auto=format&fit=crop&w=600&q=80" alt="VR Headset" class="card-img">
-            <div class="card-content">
-                <i class="fa-solid fa-shield-halved"></i>
-                <h3>XR for National Defense</h3>
-                <p>국방 훈련을 위한 초실감형 메타버스 인터페이스 연구 및 인공지능 기반 인간 검증 데이터셋 구축.</p>
-            </div>
-        </article>
-
-        <!-- Card 2 -->
-        <article class="card">
-            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80" alt="Data Analysis" class="card-content-img card-img">
-            <div class="card-content">
-                <i class="fa-solid fa-eye"></i>
-                <h3>Cybersickness Mitigation</h3>
-                <p>시선 추적(Eye-tracking) 및 시각/햅틱 피드백을 활용한 자율주행 및 VR 환경 내 사이버멀미 분석 및 저감 솔루션.</p>
-            </div>
-        </article>
-
-        <!-- Card 3 -->
-        <article class="card">
-            <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=600&q=80" alt="Medical Technology" class="card-img">
-            <div class="card-content">
-                <i class="fa-solid fa-bed-pulse"></i>
-                <h3>Digital Therapeutics</h3>
-                <p>병상 환자(Bedridden Patients) 및 교통약자를 위한 VR 기반 치료/편의 기술 및 상호작용 인터페이스 설계.</p>
-            </div>
-        </article>
+    <!-- 3. Vision Section -->
+    <section class="section-card" id="vision">
+        <h2><i class="fa-solid fa-bullseye"></i> Vision</h2>
+        <h3 style="margin: 5rem 0; font-size: 2.2rem; color: var(--primary-dark); line-height: 1.4;">"창의적인 아이디어로 세상을 바꾸는 사람"</h3>
     </section>
 
-    <!-- Contact Section -->
-    <section class="contact-section">
-        <h2>Let's Connect</h2>
-        <p style="margin-top: 10px; color: var(--text-light);">연구 협력이나 DXP 연구실에 관심이 있으시다면 언제든 연락주세요.</p>
-        <div class="contact-links">
-            <a href="mailto:example@korea.ac.kr" class="btn btn-fill">
-                <i class="fa-solid fa-envelope"></i> Email Me
-            </a>
-            <a href="https://github.com" class="btn btn-outline" target="_blank">
-                <i class="fa-brands fa-github"></i> GitHub
-            </a>
-            <a href="#" class="btn btn-outline">
-                <i class="fa-solid fa-globe"></i> Lab Website
-            </a>
+    <!-- 4. Courses Section -->
+    <section class="section-card" id="courses">
+        <h2><i class="fa-solid fa-book"></i> Courses</h2>
+        <div class="section-content-wrapper">
+            <div class="info-card">
+                <h4 class="card-subtitle">현재 수강 강의</h4>
+                <p style="color: var(--text-light);">내용을 입력해주세요.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Projects Section -->
+    <section class="section-card" id="projects">
+        <h2><i class="fa-solid fa-diagram-project"></i> Projects</h2>
+        <div class="section-content-wrapper">
+            <div class="info-card">
+                <h4 class="card-subtitle">수행 프로젝트</h4>
+                <p style="color: var(--text-light);">내용을 입력해주세요.</p>
+            </div>
+            <div class="info-card">
+                <h4 class="card-subtitle">나의 역할</h4>
+                <p style="color: var(--text-light);">내용을 입력해주세요.</p>
+            </div>
+            <div class="info-card">
+                <h4 class="card-subtitle">결과물</h4>
+                <p style="color: var(--text-light);">내용을 입력해주세요.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. Skills Section -->
+    <section class="section-card" id="skills">
+        <h2><i class="fa-solid fa-gears"></i> Skills</h2>
+        <div class="section-content-wrapper">
+            <div class="info-card">
+                <h4 class="card-subtitle">보유 기술</h4>
+                <p style="color: var(--text-light);">내용을 입력해주세요.</p>
+            </div>
+            <div class="info-card">
+                <h4 class="card-subtitle">학습 중</h4>
+                <p style="color: var(--text-light);">내용을 입력해주세요.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. Activities Section -->
+    <section class="section-card" id="activities">
+        <h2><i class="fa-solid fa-star"></i> Activities</h2>
+        <div class="section-content-wrapper">
+            <div class="info-card">
+                <h4 class="card-subtitle">동아리</h4>
+                <p style="color: var(--text-light);">내용을 입력해주세요.</p>
+            </div>
+            <div class="info-card">
+                <h4 class="card-subtitle">공모전</h4>
+                <p style="color: var(--text-light);">내용을 입력해주세요.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. Contact Section -->
+    <section class="contact-section" id="contact">
+        <h2><i class="fa-solid fa-envelope"></i> Contact</h2>
+        <div class="section-content-wrapper">
+            <div class="info-card">
+                <h4 class="card-subtitle">Email / GitHub</h4>
+                <p style="color: var(--text-light);">내용을 입력해주세요.</p>
+            </div>
         </div>
     </section>
 </main>
 
 <footer>
-    <p>&copy; 2026 Hanseob Kim & DXP Lab. All rights reserved.</p>
+    <p>&copy; 2026 HanJun Byun & DXP Lab. All rights reserved.</p>
 </footer>
 
 </body>
