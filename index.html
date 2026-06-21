@@ -333,6 +333,76 @@
             gap: 1.5rem;
             margin-top: 3rem;
         }
+
+        /* Locked Course Card */
+        .info-card.locked {
+            background: #f1f3f5;
+            border-color: #ced4da;
+            opacity: 0.7;
+        }
+
+        .info-card.locked:hover {
+            transform: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+            border-color: #ced4da;
+        }
+
+        .info-card.locked .card-subtitle {
+            background: #adb5bd;
+            box-shadow: none;
+        }
+
+        .info-card.locked .lock-icon {
+            font-size: 1.8rem;
+            color: #adb5bd;
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+
+        /* Complete Stamp */
+        .info-card.completed {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .complete-stamp {
+            position: absolute;
+            top: 1.2rem;
+            right: -2.2rem;
+            transform: rotate(35deg);
+            border: 4px solid var(--primary-dark);
+            color: var(--primary-dark);
+            font-weight: 700;
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            padding: 4px 2.5rem;
+            border-radius: 8px;
+            opacity: 0.85;
+            pointer-events: none;
+        }
+
+        /* Status Bar (현재 시간 / 스크롤 진행률) - 화면 하단 고정, 작게 표시 */
+        .status-bar {
+            position: fixed;
+            bottom: 8px;
+            right: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.7rem;
+            color: var(--primary-dark);
+            background: rgba(255, 255, 255, 0.85);
+            padding: 4px 10px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            z-index: 999;
+        }
+
+        .status-bar span {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
     </style>
 </head>
 <body>
@@ -395,16 +465,61 @@
     <!-- 3. Vision Section -->
     <section class="section-card" id="vision">
         <h2><i class="fa-solid fa-bullseye"></i> Vision</h2>
-        <h3 style="margin: 5rem 0; font-size: 2.2rem; color: var(--primary-dark); line-height: 1.4;">"창의적인 아이디어로 세상을 바꾸는 사람"</h3>
+        <h3 style="margin: 5rem 0 1rem; font-size: 2.2rem; color: var(--primary-dark); line-height: 1.4;">"창의적인 아이디어로 세상을 바꾸는 사람"</h3>
+        <p style="color: var(--text-light); font-size: 1.1rem; margin-bottom: 3rem;">다양한 방면으로 생각하고 새로운 시도를 해봄으로써 기존 틀을 부숴 더욱 발전하고 새로운 변화를 주는 모습을 보여주고 싶습니다.</p>
     </section>
 
     <!-- 4. Courses Section -->
     <section class="section-card" id="courses">
         <h2><i class="fa-solid fa-book"></i> Courses</h2>
         <div class="section-content-wrapper">
-            <div class="info-card">
-                <h4 class="card-subtitle">현재 수강 강의</h4>
-                <p style="color: var(--text-light);">내용을 입력해주세요.</p>
+            <div class="info-card completed" style="text-align: left;">
+                <span class="complete-stamp">COMPLETE</span>
+                <h4 class="card-subtitle">1학년 1학기</h4>
+                <ul class="item-list">
+                    <li>메타버스프로그래밍</li>
+                    <li>실감미디어컴퓨팅개론</li>
+                    <li>XR콘텐츠문화지형도</li>
+                    <li>SDG-지혁사회문제해결 1</li>
+                    <li>DYT-볼링</li>
+                    <li>DYC_인간에대한다학문적이해_호모리츄얼</li>
+                    <li>DYC_K-글로컬문화의이해_패션과사회문화</li>
+                </ul>
+            </div>
+            <div class="info-card locked">
+                <i class="fa-solid fa-lock lock-icon"></i>
+                <h4 class="card-subtitle">1학년 2학기</h4>
+                <p style="color: var(--text-light);">다른 과목들을 이수해 해금하세요!</p>
+            </div>
+            <div class="info-card locked">
+                <i class="fa-solid fa-lock lock-icon"></i>
+                <h4 class="card-subtitle">2학년 1학기</h4>
+                <p style="color: var(--text-light);">다른 과목들을 이수해 해금하세요!</p>
+            </div>
+            <div class="info-card locked">
+                <i class="fa-solid fa-lock lock-icon"></i>
+                <h4 class="card-subtitle">2학년 2학기</h4>
+                <p style="color: var(--text-light);">다른 과목들을 이수해 해금하세요!</p>
+            </div>
+            <div class="info-card locked">
+                <i class="fa-solid fa-lock lock-icon"></i>
+                <h4 class="card-subtitle">3학년 1학기</h4>
+                <p style="color: var(--text-light);">다른 과목들을 이수해 해금하세요!</p>
+            </div>
+            <div class="info-card locked">
+                <i class="fa-solid fa-lock lock-icon"></i>
+                <h4 class="card-subtitle">3학년 2학기</h4>
+                <p style="color: var(--text-light);">다른 과목들을 이수해 해금하세요!</p>
+            </div>
+            <div class="info-card locked">
+                <i class="fa-solid fa-lock lock-icon"></i>
+                <h4 class="card-subtitle">4학년 1학기</h4>
+                <p style="color: var(--text-light);">다른 과목들을 이수해 해금하세요!</p>
+            </div>
+            <div class="info-card locked">
+                <i class="fa-solid fa-lock lock-icon"></i>
+                <h4 class="card-subtitle">4학년 2학기</h4>
+                <p style="color: var(--text-light);">다른 과목들을 이수해 해금하세요!</p>
             </div>
         </div>
     </section>
@@ -413,17 +528,29 @@
     <section class="section-card" id="projects">
         <h2><i class="fa-solid fa-diagram-project"></i> Projects</h2>
         <div class="section-content-wrapper">
-            <div class="info-card">
-                <h4 class="card-subtitle">수행 프로젝트</h4>
-                <p style="color: var(--text-light);">내용을 입력해주세요.</p>
+            <div class="info-card completed" style="text-align: left;">
+                <span class="complete-stamp">COMPLETE</span>
+                <h4 class="card-subtitle">프로젝트 1</h4>
+                <img src="project1-screenshot.png" alt="로블록스로 영화 살목지 구현하기" class="card-img" style="border-radius: 8px; margin-bottom: 1rem; height: auto; object-fit: contain; background: #0d1b2a;">
+                <p style="color: var(--text-light);"><strong>프로젝트명:</strong> 로블록스로 영화 "살목지" 구현하기</p>
+                <p style="color: var(--text-light);"><strong>설명:</strong> 살목지 콘셉트에 맞는 게임 플레이 요소와 영화 장면을 바이브 코딩을 이용하여 만든 로블록스 콘텐츠</p>
+                <p style="color: var(--text-light);"><strong>결과물:</strong> <a href="https://www.roblox.com/ko/games/109091509186425/unnamed" target="_blank" rel="noopener" style="color: var(--primary-dark); font-weight: 500;">로블록스에서 플레이하기</a></p>
             </div>
-            <div class="info-card">
-                <h4 class="card-subtitle">나의 역할</h4>
-                <p style="color: var(--text-light);">내용을 입력해주세요.</p>
+            <div class="info-card completed" style="text-align: left;">
+                <span class="complete-stamp">COMPLETE</span>
+                <h4 class="card-subtitle">프로젝트 2</h4>
+                <img src="project2-screenshot.png" alt="Military & Education XR 발표" class="card-img" style="border-radius: 8px; margin-bottom: 1rem; height: auto; object-fit: contain; background: #0d1b2a;">
+                <p style="color: var(--text-light);"><strong>프로젝트명:</strong> Military & Education XR에 대한 발표</p>
+                <p style="color: var(--text-light);"><strong>설명:</strong> 기존의 게임, 예술 분야 뿐만 아니라 군사, 교육 목적에서의 XR이 활용되는 예시, 현재까지의 한계점에 대해 설명하고, 앞으로 XR의 발전에 따른 군사, 교육 분야에서의 기대효과들에 대해 설명하는 발표 프로젝트</p>
+                <p style="color: var(--text-light);"><strong>결과물:</strong> 내용을 입력해주세요.</p>
             </div>
-            <div class="info-card">
-                <h4 class="card-subtitle">결과물</h4>
-                <p style="color: var(--text-light);">내용을 입력해주세요.</p>
+            <div class="info-card completed" style="text-align: left;">
+                <span class="complete-stamp">COMPLETE</span>
+                <h4 class="card-subtitle">프로젝트 3</h4>
+                <img src="project3-screenshot.png" alt="인간은 역사에 의해 존재한다" class="card-img" style="border-radius: 8px; margin-bottom: 1rem; height: auto; object-fit: contain; background: #0d1b2a;">
+                <p style="color: var(--text-light);"><strong>프로젝트명:</strong> 인간에 대한 다학문적 이해_인간은 역사에 의해 존재한다</p>
+                <p style="color: var(--text-light);"><strong>설명:</strong> "인간은 과거에 의해 현재를 살아가며 현재의 선택은 미래를 결정한다"라는 메세지를 2분 길이의 짧은 단편 영화로 제작해 약 120여명이 있는 발표회에서 공개했다. 기획, 촬영, 편집을 모두 도맡아 제작하였으며, 작품 내에서 부장님으로 출연하기도 했다.</p>
+                <p style="color: var(--text-light);"><strong>결과물:</strong> <a href="https://youtu.be/_84fkstw57Q" target="_blank" rel="noopener" style="color: var(--primary-dark); font-weight: 500;">영상 보러가기</a></p>
             </div>
         </div>
     </section>
@@ -447,9 +574,12 @@
     <section class="section-card" id="activities">
         <h2><i class="fa-solid fa-star"></i> Activities</h2>
         <div class="section-content-wrapper">
-            <div class="info-card">
+            <div class="info-card" style="text-align: left;">
                 <h4 class="card-subtitle">동아리</h4>
-                <p style="color: var(--text-light);">내용을 입력해주세요.</p>
+                <ul class="item-list">
+                    <li>스매쉬: 배드민턴 동아리</li>
+                    <li>예인: 연극 동아리</li>
+                </ul>
             </div>
             <div class="info-card">
                 <h4 class="card-subtitle">공모전</h4>
@@ -473,6 +603,29 @@
 <footer>
     <p>&copy; 2026 HanJun Byun & DXP Lab. All rights reserved.</p>
 </footer>
+
+<div class="status-bar">
+    <span><i class="fa-regular fa-clock"></i> <span id="current-time"></span></span>
+    <span><i class="fa-solid fa-arrow-down-long"></i> <span id="scroll-progress">0%</span></span>
+</div>
+
+<script>
+    function updateClock() {
+        const now = new Date();
+        document.getElementById('current-time').textContent = now.toLocaleString('ko-KR');
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    function updateScrollProgress() {
+        const scrollTop = document.documentElement.scrollTop;
+        const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const progress = scrollHeight > 0 ? Math.round((scrollTop / scrollHeight) * 100) : 0;
+        document.getElementById('scroll-progress').textContent = progress + '%';
+    }
+    window.addEventListener('scroll', updateScrollProgress);
+    updateScrollProgress();
+</script>
 
 </body>
 </html>
