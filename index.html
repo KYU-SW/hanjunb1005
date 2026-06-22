@@ -1281,14 +1281,12 @@
             bird.addEventListener('animationend', () => bird.remove());
 
             hero.appendChild(bird);
+            scheduleBird();
         }
 
         function scheduleBird() {
             const delay = 6000 + Math.random() * 14000;
-            setTimeout(() => {
-                spawnBird();
-                scheduleBird();
-            }, delay);
+            setTimeout(spawnBird, delay);
         }
 
         scheduleBird();
