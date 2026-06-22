@@ -862,6 +862,10 @@
                 <h4 class="card-subtitle">화면</h4>
                 <p id="spec-screen" style="color: var(--text-light);">측정 중...</p>
             </div>
+            <div class="info-card">
+                <h4 class="card-subtitle">내 IP 주소</h4>
+                <p id="spec-ip" style="color: var(--text-light);">조회 중...</p>
+            </div>
         </div>
         <p style="margin-top: 1.5rem; font-size: 0.8rem; color: var(--text-light);">* 보안·개인정보 보호 정책상 브라우저가 노출하는 범위 내의 추정값입니다. 실제 사양과 다를 수 있으며, Safari 등 일부 브라우저는 GPU/RAM 정보를 제공하지 않습니다.</p>
     </section>
@@ -1351,11 +1355,13 @@
             gpuEl.textContent = '확인 불가';
         }
 
-        if (navigator.storage && navigator.storage.estimate) {
-            navigator.storage.estimate().then(({ quota }) => {
+        if (location.protocol === 'file:') {
+            storageEl.textContent = 'file://로 열면 측정 불가 (서버에 올리면 표시됨)';
+        } else if (navigator.storage && navigator.storage.estimate) {
+            navigator.storage.estimate().then(({ quota, usage }) => {
                 if (quota) {
-                    const quotaGB = (quota / (1024 ** 3)).toFixed(1);
-                    storageEl.textContent = `브라우저 사용 가능 공간 약 ${quotaGB}GB`;
+                    const freeGB = ((quota - (usage || 0)) / (1024 ** 3)).toFixed(1);
+                    storageEl.textContent = `여유 공간 약 ${freeGB}GB (브라우저 추정치)`;
                 } else {
                     storageEl.textContent = '확인 불가';
                 }
@@ -1366,6 +1372,12 @@
 
         osEl.textContent = navigator.platform || '알 수 없음';
         screenEl.textContent = `${window.screen.width} x ${window.screen.height} (배율 ${window.devicePixelRatio}x)`;
+
+        const ipEl = document.getElementById('spec-ip');
+        fetch('https://api.ipify.org?format=json')
+            .then((res) => res.json())
+            .then((data) => { ipEl.textContent = data.ip; })
+            .catch(() => { ipEl.textContent = '조회 실패 (네트워크 차단 또는 오프라인)'; });
     })();
 </script>
 
