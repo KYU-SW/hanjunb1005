@@ -99,6 +99,8 @@
             color: var(--white);
             padding: 5rem 2rem;
             text-align: center;
+            position: relative;
+            overflow: hidden;
         }
 
         .hero h1 {
@@ -334,6 +336,218 @@
             margin-top: 3rem;
         }
 
+        /* Easter Egg: Breakout Game */
+        .hero-img {
+            cursor: pointer;
+        }
+
+        .hero-img-wrap {
+            position: relative;
+            display: inline-block;
+        }
+
+        .hero-img-tooltip {
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translate(-50%, 0);
+            background: rgba(13, 27, 42, 0.85);
+            color: var(--white);
+            font-size: 0.75rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+
+        .hero-img-wrap:hover .hero-img-tooltip {
+            opacity: 1;
+            transform: translate(-50%, 8px);
+        }
+
+        .hero-img.shaking {
+            cursor: grabbing;
+        }
+
+        .char {
+            display: inline-block;
+            transition: transform 0.9s cubic-bezier(0.55, 0.06, 0.68, 0.19), opacity 0.9s ease;
+        }
+
+        /* Easter Egg: Flying Bird */
+        .bird {
+            position: absolute;
+            font-size: 1.8rem;
+            cursor: pointer;
+            z-index: 20;
+            line-height: 1;
+            user-select: none;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.25));
+            animation-timing-function: linear;
+        }
+
+        .bird:hover {
+            transform: scale(1.25);
+        }
+
+        .bird.flip {
+            transform: scaleX(-1);
+        }
+
+        .bird.flip:hover {
+            transform: scaleX(-1) scale(1.25);
+        }
+
+        @keyframes bird-fly-ltr {
+            from { left: -8%; }
+            to { left: 108%; }
+        }
+
+        @keyframes bird-fly-rtl {
+            from { left: 108%; }
+            to { left: -8%; }
+        }
+
+        /* Easter Egg: Reaction Speed Test */
+        .reaction-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(13, 27, 42, 0.92);
+            z-index: 5000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease;
+        }
+
+        .reaction-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .reaction-overlay .breakout-inner {
+            transform: scale(0.92);
+            transition: transform 0.4s ease;
+        }
+
+        .reaction-overlay.visible .breakout-inner {
+            transform: scale(1);
+        }
+
+        .reaction-box {
+            width: 340px;
+            height: 340px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 0.5rem;
+            cursor: pointer;
+            text-align: center;
+            padding: 1.5rem;
+            transition: background-color 0.15s ease;
+            background: #495057;
+            color: var(--white);
+        }
+
+        .reaction-box.go {
+            background: var(--primary-color);
+        }
+
+        .reaction-box.early {
+            background: #e03131;
+        }
+
+        .reaction-box .reaction-big {
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+
+        .reaction-box .reaction-small {
+            font-size: 0.9rem;
+            opacity: 0.85;
+        }
+
+        .breakout-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(13, 27, 42, 0.92);
+            z-index: 5000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease;
+        }
+
+        .breakout-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .breakout-overlay .breakout-inner {
+            transform: scale(0.92);
+            transition: transform 0.4s ease;
+            text-align: center;
+        }
+
+        .breakout-overlay.visible .breakout-inner {
+            transform: scale(1);
+        }
+
+        #breakout-canvas {
+            background: #f8fff0;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            touch-action: none;
+        }
+
+        .breakout-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--white);
+            margin-bottom: 0.8rem;
+            font-weight: 700;
+        }
+
+        .breakout-close {
+            background: none;
+            border: 2px solid var(--white);
+            color: var(--white);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            font-size: 1rem;
+            line-height: 1;
+            transition: var(--transition);
+        }
+
+        .breakout-close:hover {
+            background: var(--white);
+            color: var(--text-color);
+        }
+
+        .breakout-hint {
+            color: var(--primary-light);
+            font-size: 0.85rem;
+            margin-top: 0.8rem;
+        }
+
         /* Locked Course Card */
         .info-card.locked {
             background: #f1f3f5;
@@ -426,7 +640,10 @@
 
 <!-- 1. Home Section -->
 <header class="hero" id="home">
-    <img src="LFEWORK.jpeg" alt="HanJun Byun" class="hero-img">
+    <div class="hero-img-wrap">
+        <img src="LFEWORK.jpeg" alt="HanJun Byun" class="hero-img" id="hero-img">
+        <span class="hero-img-tooltip">더블클릭 해보세요!</span>
+    </div>
     <h1>HanJun Byun</h1>
     <p class="role">"언젠가 내가 마주할 아주 먼 미래의 넌 그 꿈을 이루나요"</p>
 </header>
@@ -602,18 +819,18 @@
     <section class="contact-section" id="contact" style="min-height: auto; padding: 3rem 2.5rem;">
         <h2><i class="fa-solid fa-envelope"></i> Contact</h2>
         <div class="section-content-wrapper">
-            <div class="info-card">
+            <a href="mailto:hanjunb1005@gmail.com" class="info-card" style="text-decoration: none; display: block;">
                 <h4 class="card-subtitle"><i class="fa-solid fa-envelope"></i> 이메일</h4>
-                <p><a href="mailto:hanjunb1005@gmail.com" style="color: var(--text-light); text-decoration: none;">hanjunb1005@gmail.com</a></p>
-            </div>
-            <div class="info-card">
+                <p style="color: var(--text-light);">hanjunb1005@gmail.com</p>
+            </a>
+            <a href="https://www.instagram.com/nujnah07" target="_blank" rel="noopener" class="info-card" style="text-decoration: none; display: block;">
                 <h4 class="card-subtitle"><i class="fa-brands fa-instagram"></i> Instagram</h4>
-                <p><a href="https://www.instagram.com/nujnah07" target="_blank" rel="noopener" style="color: var(--text-light); text-decoration: none;">nujnah07</a></p>
-            </div>
-            <div class="info-card">
+                <p style="color: var(--text-light);">nujnah07</p>
+            </a>
+            <a href="https://github.com/hanjunb1005" target="_blank" rel="noopener" class="info-card" style="text-decoration: none; display: block;">
                 <h4 class="card-subtitle"><i class="fa-brands fa-github"></i> GitHub</h4>
-                <p><a href="https://github.com/hanjunb1005" target="_blank" rel="noopener" style="color: var(--text-light); text-decoration: none;">hanjunb1005</a></p>
-            </div>
+                <p style="color: var(--text-light);">hanjunb1005</p>
+            </a>
         </div>
     </section>
 </main>
@@ -625,6 +842,33 @@
 <div class="status-bar">
     <span><i class="fa-regular fa-clock"></i> <span id="current-time"></span></span>
     <span><i class="fa-solid fa-arrow-down-long"></i> <span id="scroll-progress">0%</span></span>
+</div>
+
+<!-- Easter Egg: Breakout Game -->
+<div class="breakout-overlay" id="breakout-overlay">
+    <div class="breakout-inner">
+        <div class="breakout-header">
+            <span id="breakout-status">DOUBLE CLICK UNLOCKED 🎉</span>
+            <button class="breakout-close" id="breakout-close" aria-label="닫기">✕</button>
+        </div>
+        <canvas id="breakout-canvas" width="480" height="520"></canvas>
+        <p class="breakout-hint">마우스를 움직여 바를 조작하세요 · ESC로 닫기</p>
+    </div>
+</div>
+
+<!-- Easter Egg: Reaction Speed Test -->
+<div class="reaction-overlay" id="reaction-overlay">
+    <div class="breakout-inner">
+        <div class="breakout-header">
+            <span>🐦 반응속도 테스트</span>
+            <button class="breakout-close" id="reaction-close" aria-label="닫기">✕</button>
+        </div>
+        <div class="reaction-box" id="reaction-box">
+            <span class="reaction-big" id="reaction-big">클릭해서 시작</span>
+            <span class="reaction-small" id="reaction-small">초록색으로 바뀌면 최대한 빨리 클릭하세요</span>
+        </div>
+        <p class="breakout-hint">ESC로 닫기</p>
+    </div>
 </div>
 
 <script>
@@ -643,6 +887,412 @@
     }
     window.addEventListener('scroll', updateScrollProgress);
     updateScrollProgress();
+
+    // Easter Egg: Breakout Game
+    (function() {
+        const heroImg = document.getElementById('hero-img');
+        const overlay = document.getElementById('breakout-overlay');
+        const closeBtn = document.getElementById('breakout-close');
+        const canvas = document.getElementById('breakout-canvas');
+        const statusEl = document.getElementById('breakout-status');
+        const ctx = canvas.getContext('2d');
+
+        const ballImg = new Image();
+        ballImg.src = heroImg.src;
+
+        const W = canvas.width, H = canvas.height;
+        const BALL_R = 16;
+        const PADDLE_W = 90, PADDLE_H = 14;
+        const BRICK_ROWS = 4, BRICK_COLS = 6;
+        const BRICK_W = 68, BRICK_H = 30, BRICK_PAD = 8, BRICK_TOP = 50;
+        const BRICK_LEFT = (W - (BRICK_COLS * (BRICK_W + BRICK_PAD) - BRICK_PAD)) / 2;
+
+        let paddleX, ballX, ballY, ballDX, ballDY, bricks, running, animId;
+
+        function resetGame() {
+            paddleX = (W - PADDLE_W) / 2;
+            ballX = W / 2;
+            ballY = H - 70;
+            ballDX = 3.2;
+            ballDY = -3.2;
+            bricks = [];
+            for (let r = 0; r < BRICK_ROWS; r++) {
+                for (let c = 0; c < BRICK_COLS; c++) {
+                    bricks.push({
+                        x: BRICK_LEFT + c * (BRICK_W + BRICK_PAD),
+                        y: BRICK_TOP + r * (BRICK_H + BRICK_PAD),
+                        alive: true
+                    });
+                }
+            }
+            statusEl.textContent = 'DOUBLE CLICK UNLOCKED 🎉';
+        }
+
+        function drawBrick(b) {
+            ctx.save();
+            ctx.translate(b.x + BRICK_W / 2, b.y + BRICK_H / 2);
+            ctx.fillStyle = '#f1f3f5';
+            ctx.strokeStyle = '#2f9e44';
+            ctx.lineWidth = 3;
+            roundRect(-BRICK_W / 2, -BRICK_H / 2, BRICK_W, BRICK_H, 6);
+            ctx.fill();
+            ctx.stroke();
+            ctx.fillStyle = '#2f9e44';
+            ctx.font = 'bold 9px "Noto Sans KR", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('COMPLETE', 0, 0);
+            ctx.restore();
+        }
+
+        function roundRect(x, y, w, h, r) {
+            ctx.beginPath();
+            ctx.moveTo(x + r, y);
+            ctx.arcTo(x + w, y, x + w, y + h, r);
+            ctx.arcTo(x + w, y + h, x, y + h, r);
+            ctx.arcTo(x, y + h, x, y, r);
+            ctx.arcTo(x, y, x + w, y, r);
+            ctx.closePath();
+        }
+
+        function drawBall() {
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(ballX, ballY, BALL_R, 0, Math.PI * 2);
+            ctx.closePath();
+            ctx.clip();
+            ctx.drawImage(ballImg, ballX - BALL_R, ballY - BALL_R, BALL_R * 2, BALL_R * 2);
+            ctx.restore();
+            ctx.beginPath();
+            ctx.arc(ballX, ballY, BALL_R, 0, Math.PI * 2);
+            ctx.strokeStyle = '#2f9e44';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+
+        function drawPaddle() {
+            ctx.fillStyle = '#51cf66';
+            roundRect(paddleX, H - 24, PADDLE_W, PADDLE_H, 7);
+            ctx.fill();
+        }
+
+        function drawScene() {
+            ctx.clearRect(0, 0, W, H);
+            bricks.forEach(b => b.alive && drawBrick(b));
+            drawPaddle();
+            drawBall();
+        }
+
+        function step() {
+            ballX += ballDX;
+            ballY += ballDY;
+
+            if (ballX - BALL_R < 0 || ballX + BALL_R > W) ballDX *= -1;
+            if (ballY - BALL_R < 0) ballDY *= -1;
+
+            if (ballY + BALL_R > H - 24 && ballY + BALL_R < H - 24 + PADDLE_H + 6 &&
+                ballX > paddleX && ballX < paddleX + PADDLE_W) {
+                ballDY = -Math.abs(ballDY);
+                const hitPos = (ballX - (paddleX + PADDLE_W / 2)) / (PADDLE_W / 2);
+                ballDX = hitPos * 4;
+            }
+
+            for (const b of bricks) {
+                if (!b.alive) continue;
+                if (ballX + BALL_R > b.x && ballX - BALL_R < b.x + BRICK_W &&
+                    ballY + BALL_R > b.y && ballY - BALL_R < b.y + BRICK_H) {
+                    b.alive = false;
+                    ballDY *= -1;
+                    const speedUp = 1.04;
+                    const maxSpeed = 9;
+                    ballDX = Math.max(-maxSpeed, Math.min(maxSpeed, ballDX * speedUp));
+                    ballDY = Math.max(-maxSpeed, Math.min(maxSpeed, ballDY * speedUp));
+                    break;
+                }
+            }
+
+            if (ballY - BALL_R > H) {
+                statusEl.textContent = 'GAME OVER — 클릭해서 다시 시작';
+                running = false;
+                return;
+            }
+
+            if (bricks.every(b => !b.alive)) {
+                statusEl.textContent = 'YOU WIN! 🏆 클릭해서 다시 시작';
+                running = false;
+                return;
+            }
+
+            drawScene();
+            animId = requestAnimationFrame(step);
+        }
+
+        function startGame() {
+            resetGame();
+            running = true;
+            drawScene();
+            cancelAnimationFrame(animId);
+            animId = requestAnimationFrame(step);
+        }
+
+        function openOverlay() {
+            overlay.style.display = 'flex';
+            requestAnimationFrame(() => overlay.classList.add('visible'));
+            startGame();
+        }
+
+        function closeOverlay() {
+            overlay.classList.remove('visible');
+            running = false;
+            cancelAnimationFrame(animId);
+            setTimeout(() => { overlay.style.display = 'none'; }, 400);
+        }
+
+        canvas.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const scale = W / rect.width;
+            paddleX = Math.min(Math.max((e.clientX - rect.left) * scale - PADDLE_W / 2, 0), W - PADDLE_W);
+        });
+
+        canvas.addEventListener('click', () => {
+            if (!running) startGame();
+        });
+
+        heroImg.addEventListener('dblclick', openOverlay);
+        closeBtn.addEventListener('click', closeOverlay);
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) closeOverlay();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && overlay.classList.contains('visible')) closeOverlay();
+        });
+    })();
+
+    // Easter Egg: Shake profile photo to collapse the page's text
+    (function() {
+        const heroImg = document.getElementById('hero-img');
+        heroImg.setAttribute('draggable', 'false');
+        heroImg.addEventListener('dragstart', (e) => e.preventDefault());
+
+        function wrapText(root) {
+            const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+                acceptNode(node) {
+                    if (!node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+                    const parent = node.parentElement;
+                    if (!parent) return NodeFilter.FILTER_REJECT;
+                    if (['SCRIPT', 'STYLE', 'TEXTAREA'].includes(parent.tagName)) return NodeFilter.FILTER_REJECT;
+                    if (parent.closest('#breakout-overlay, .status-bar')) return NodeFilter.FILTER_REJECT;
+                    return NodeFilter.FILTER_ACCEPT;
+                }
+            });
+            const textNodes = [];
+            let node;
+            while ((node = walker.nextNode())) textNodes.push(node);
+
+            textNodes.forEach((textNode) => {
+                const frag = document.createDocumentFragment();
+                textNode.nodeValue.split('').forEach((ch) => {
+                    if (ch === ' ') {
+                        frag.appendChild(document.createTextNode(' '));
+                    } else {
+                        const span = document.createElement('span');
+                        span.className = 'char';
+                        span.textContent = ch;
+                        frag.appendChild(span);
+                    }
+                });
+                textNode.parentNode.replaceChild(frag, textNode);
+            });
+        }
+
+        wrapText(document.body);
+
+        let shattering = false;
+        function triggerCollapse() {
+            if (shattering) return;
+            shattering = true;
+            heroImg.classList.add('shaking');
+
+            const chars = document.querySelectorAll('.char');
+            chars.forEach((span) => {
+                const delay = Math.random() * 300;
+                const fallDist = 300 + Math.random() * 500;
+                const drift = Math.random() * 200 - 100;
+                const rot = Math.random() * 720 - 360;
+                setTimeout(() => {
+                    span.style.transform = `translate(${drift}px, ${fallDist}px) rotate(${rot}deg)`;
+                    span.style.opacity = '0';
+                }, delay);
+            });
+
+            setTimeout(() => {
+                chars.forEach((span) => {
+                    span.style.transform = 'translate(0, 0) rotate(0deg)';
+                    span.style.opacity = '1';
+                });
+                heroImg.classList.remove('shaking');
+                setTimeout(() => { shattering = false; }, 900);
+            }, 3200);
+        }
+
+        let dragging = false, startX = 0, startY = 0, lastX = 0, lastDir = 0, reversals = 0, totalDist = 0;
+
+        function snapBack() {
+            heroImg.style.transition = 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            heroImg.style.transform = 'translate(0, 0)';
+            setTimeout(() => { heroImg.style.transition = ''; }, 400);
+        }
+
+        function startDrag(x, y) {
+            dragging = true;
+            startX = x;
+            startY = y;
+            lastX = x;
+            lastDir = 0;
+            reversals = 0;
+            totalDist = 0;
+            heroImg.style.transition = 'none';
+        }
+
+        function moveDrag(x, y) {
+            if (!dragging || shattering) return;
+            heroImg.style.transform = `translate(${x - startX}px, ${y - startY}px)`;
+
+            const dx = x - lastX;
+            if (Math.abs(dx) > 3) {
+                const dir = Math.sign(dx);
+                if (lastDir !== 0 && dir !== lastDir) reversals++;
+                lastDir = dir;
+                totalDist += Math.abs(dx);
+                lastX = x;
+            }
+            if (reversals >= 4 && totalDist > 150) {
+                triggerCollapse();
+                dragging = false;
+                snapBack();
+            }
+        }
+
+        function endDrag() {
+            if (!dragging) return;
+            dragging = false;
+            snapBack();
+        }
+
+        heroImg.addEventListener('mousedown', (e) => startDrag(e.clientX, e.clientY));
+        window.addEventListener('mousemove', (e) => moveDrag(e.clientX, e.clientY));
+        window.addEventListener('mouseup', endDrag);
+
+        heroImg.addEventListener('touchstart', (e) => startDrag(e.touches[0].clientX, e.touches[0].clientY));
+        window.addEventListener('touchmove', (e) => moveDrag(e.touches[0].clientX, e.touches[0].clientY));
+        window.addEventListener('touchend', endDrag);
+    })();
+
+    // Easter Egg: Flying bird that opens a reaction speed test
+    (function() {
+        const hero = document.getElementById('home');
+        const overlay = document.getElementById('reaction-overlay');
+        const closeBtn = document.getElementById('reaction-close');
+        const box = document.getElementById('reaction-box');
+        const bigText = document.getElementById('reaction-big');
+        const smallText = document.getElementById('reaction-small');
+
+        let state = 'idle'; // idle | waiting | go | result
+        let goTimer = null;
+        let startTime = 0;
+
+        function setBox(stateName, big, small) {
+            box.classList.remove('go', 'early');
+            if (stateName) box.classList.add(stateName);
+            bigText.textContent = big;
+            smallText.textContent = small;
+        }
+
+        function resetReaction() {
+            state = 'idle';
+            clearTimeout(goTimer);
+            setBox('', '클릭해서 시작', '초록색으로 바뀌면 최대한 빨리 클릭하세요');
+        }
+
+        box.addEventListener('click', () => {
+            if (state === 'idle' || state === 'result') {
+                state = 'waiting';
+                setBox('', '기다리세요...', '초록색이 되면 클릭!');
+                const delay = 1000 + Math.random() * 2500;
+                goTimer = setTimeout(() => {
+                    state = 'go';
+                    startTime = performance.now();
+                    setBox('go', '지금 클릭!', '');
+                }, delay);
+            } else if (state === 'waiting') {
+                clearTimeout(goTimer);
+                state = 'result';
+                setBox('early', '너무 빨랐어요!', '다시 클릭해서 도전하세요');
+            } else if (state === 'go') {
+                const reaction = Math.round(performance.now() - startTime);
+                state = 'result';
+                let rating = '나쁘지 않아요';
+                if (reaction < 180) rating = '엄청 빠름! ⚡';
+                else if (reaction < 250) rating = '빠름!';
+                else if (reaction < 350) rating = '평균';
+                else rating = '느려요 🐢';
+                setBox('', reaction + 'ms', rating + ' · 다시 클릭해서 재도전');
+            }
+        });
+
+        function openReactionOverlay() {
+            resetReaction();
+            overlay.style.display = 'flex';
+            requestAnimationFrame(() => overlay.classList.add('visible'));
+        }
+
+        function closeReactionOverlay() {
+            overlay.classList.remove('visible');
+            clearTimeout(goTimer);
+            setTimeout(() => { overlay.style.display = 'none'; }, 400);
+        }
+
+        closeBtn.addEventListener('click', closeReactionOverlay);
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) closeReactionOverlay();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && overlay.classList.contains('visible')) closeReactionOverlay();
+        });
+
+        function spawnBird() {
+            if (overlay.classList.contains('visible')) {
+                scheduleBird();
+                return;
+            }
+            const bird = document.createElement('span');
+            const ltr = Math.random() < 0.5;
+            bird.className = 'bird' + (ltr ? '' : ' flip');
+            bird.textContent = '🐦';
+            bird.style.top = (10 + Math.random() * 55) + '%';
+            const duration = 6 + Math.random() * 6;
+            bird.style.animation = (ltr ? 'bird-fly-ltr' : 'bird-fly-rtl') + ' ' + duration + 's linear';
+
+            bird.addEventListener('click', (e) => {
+                e.stopPropagation();
+                bird.remove();
+                openReactionOverlay();
+            });
+            bird.addEventListener('animationend', () => bird.remove());
+
+            hero.appendChild(bird);
+        }
+
+        function scheduleBird() {
+            const delay = 6000 + Math.random() * 14000;
+            setTimeout(() => {
+                spawnBird();
+                scheduleBird();
+            }, delay);
+        }
+
+        scheduleBird();
+    })();
 </script>
 
 </body>
