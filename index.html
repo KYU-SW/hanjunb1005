@@ -833,6 +833,38 @@
             </a>
         </div>
     </section>
+
+    <!-- 9. Visitor Device Info Section -->
+    <section class="section-card" id="device-info" style="min-height: auto;">
+        <h2><i class="fa-solid fa-microchip"></i> 당신의 디바이스 정보</h2>
+        <div class="section-content-wrapper">
+            <div class="info-card">
+                <h4 class="card-subtitle">CPU</h4>
+                <p id="spec-cpu" style="color: var(--text-light);">측정 중...</p>
+            </div>
+            <div class="info-card">
+                <h4 class="card-subtitle">GPU</h4>
+                <p id="spec-gpu" style="color: var(--text-light);">측정 중...</p>
+            </div>
+            <div class="info-card">
+                <h4 class="card-subtitle">RAM</h4>
+                <p id="spec-ram" style="color: var(--text-light);">측정 중...</p>
+            </div>
+            <div class="info-card">
+                <h4 class="card-subtitle">저장공간</h4>
+                <p id="spec-storage" style="color: var(--text-light);">측정 중...</p>
+            </div>
+            <div class="info-card">
+                <h4 class="card-subtitle">운영체제</h4>
+                <p id="spec-os" style="color: var(--text-light);">측정 중...</p>
+            </div>
+            <div class="info-card">
+                <h4 class="card-subtitle">화면</h4>
+                <p id="spec-screen" style="color: var(--text-light);">측정 중...</p>
+            </div>
+        </div>
+        <p style="margin-top: 1.5rem; font-size: 0.8rem; color: var(--text-light);">* 보안·개인정보 보호 정책상 브라우저가 노출하는 범위 내의 추정값입니다. 실제 사양과 다를 수 있으며, Safari 등 일부 브라우저는 GPU/RAM 정보를 제공하지 않습니다.</p>
+    </section>
 </main>
 
 <footer>
@@ -1290,6 +1322,50 @@
         }
 
         scheduleBird();
+    })();
+
+    // Visitor Device Info
+    (function() {
+        const cpuEl = document.getElementById('spec-cpu');
+        const gpuEl = document.getElementById('spec-gpu');
+        const ramEl = document.getElementById('spec-ram');
+        const storageEl = document.getElementById('spec-storage');
+        const osEl = document.getElementById('spec-os');
+        const screenEl = document.getElementById('spec-screen');
+
+        const cores = navigator.hardwareConcurrency;
+        cpuEl.textContent = cores ? `논리 코어 ${cores}개` : '이 브라우저에서는 확인 불가';
+
+        const mem = navigator.deviceMemory;
+        ramEl.textContent = mem ? `약 ${mem}GB 이상` : '이 브라우저에서는 확인 불가';
+
+        try {
+            const canvas = document.createElement('canvas');
+            const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+            const dbgInfo = gl && gl.getExtension('WEBGL_debug_renderer_info');
+            const renderer = dbgInfo
+                ? gl.getParameter(dbgInfo.UNMASKED_RENDERER_WEBGL)
+                : (gl ? gl.getParameter(gl.RENDERER) : null);
+            gpuEl.textContent = renderer || '확인 불가';
+        } catch (e) {
+            gpuEl.textContent = '확인 불가';
+        }
+
+        if (navigator.storage && navigator.storage.estimate) {
+            navigator.storage.estimate().then(({ quota }) => {
+                if (quota) {
+                    const quotaGB = (quota / (1024 ** 3)).toFixed(1);
+                    storageEl.textContent = `브라우저 사용 가능 공간 약 ${quotaGB}GB`;
+                } else {
+                    storageEl.textContent = '확인 불가';
+                }
+            }).catch(() => { storageEl.textContent = '확인 불가'; });
+        } else {
+            storageEl.textContent = '이 브라우저에서는 확인 불가';
+        }
+
+        osEl.textContent = navigator.platform || '알 수 없음';
+        screenEl.textContent = `${window.screen.width} x ${window.screen.height} (배율 ${window.devicePixelRatio}x)`;
     })();
 </script>
 
