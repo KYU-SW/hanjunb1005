@@ -476,6 +476,77 @@
             opacity: 0.85;
         }
 
+        .reaction-submit-row {
+            display: none;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .reaction-submit-row.visible {
+            display: flex;
+        }
+
+        .reaction-submit-row input {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--primary-light);
+            width: 150px;
+            font-family: inherit;
+        }
+
+        .reaction-submit-row button {
+            padding: 8px 16px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .reaction-toggle-board {
+            display: block;
+            margin: 1rem auto 0;
+            background: none;
+            border: none;
+            color: var(--primary-light);
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 0.85rem;
+        }
+
+        .reaction-board {
+            display: none;
+            margin-top: 0.8rem;
+            max-height: 220px;
+            overflow-y: auto;
+            width: 340px;
+            text-align: left;
+            color: var(--white);
+            background: rgba(255,255,255,0.06);
+            border-radius: 10px;
+            padding: 0.5rem;
+        }
+
+        .reaction-board.visible {
+            display: block;
+        }
+
+        .reaction-board-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 10px;
+            font-size: 0.9rem;
+            border-radius: 6px;
+        }
+
+        .reaction-board-row:nth-child(odd) {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .reaction-board-row .rank {
+            color: var(--primary-light);
+            font-weight: 700;
+            width: 28px;
+        }
+
         .breakout-overlay {
             position: fixed;
             top: 0;
@@ -903,9 +974,31 @@
             <span class="reaction-big" id="reaction-big">클릭해서 시작</span>
             <span class="reaction-small" id="reaction-small">초록색으로 바뀌면 최대한 빨리 클릭하세요</span>
         </div>
+        <div id="reaction-submit" class="reaction-submit-row">
+            <input id="reaction-name" type="text" maxlength="10" placeholder="닉네임 (최대 10자)">
+            <button id="reaction-submit-btn" class="btn btn-fill">랭킹 등록</button>
+        </div>
+        <button id="reaction-toggle-board" class="reaction-toggle-board">🏆 전체 랭킹 보기</button>
+        <div id="reaction-board" class="reaction-board"></div>
         <p class="breakout-hint">ESC로 닫기</p>
     </div>
 </div>
+
+<!-- Firebase: 반응속도 랭킹 저장/조회용. firebaseConfig 값을 본인 프로젝트 값으로 교체하세요. -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyB1EaKz4RhgIicHidPAZWxRbfi9cH7-UME",
+        authDomain: "project-2de0f.firebaseapp.com",
+        projectId: "project-2de0f",
+        storageBucket: "project-2de0f.firebasestorage.app",
+        messagingSenderId: "240635627874",
+        appId: "1:240635627874:web:09a5025523b74f18c2043b"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const reactionDb = firebase.firestore();
+</script>
 
 <script>
     function updateClock() {
@@ -1232,10 +1325,16 @@
         const box = document.getElementById('reaction-box');
         const bigText = document.getElementById('reaction-big');
         const smallText = document.getElementById('reaction-small');
+        const submitRow = document.getElementById('reaction-submit');
+        const nameInput = document.getElementById('reaction-name');
+        const submitBtn = document.getElementById('reaction-submit-btn');
+        const toggleBoardBtn = document.getElementById('reaction-toggle-board');
+        const boardEl = document.getElementById('reaction-board');
 
         let state = 'idle'; // idle | waiting | go | result
         let goTimer = null;
         let startTime = 0;
+        let lastReactionMs = null;
 
         function setBox(stateName, big, small) {
             box.classList.remove('go', 'early');
@@ -1247,12 +1346,15 @@
         function resetReaction() {
             state = 'idle';
             clearTimeout(goTimer);
+            lastReactionMs = null;
+            submitRow.classList.remove('visible');
             setBox('', '클릭해서 시작', '초록색으로 바뀌면 최대한 빨리 클릭하세요');
         }
 
         box.addEventListener('click', () => {
             if (state === 'idle' || state === 'result') {
                 state = 'waiting';
+                submitRow.classList.remove('visible');
                 setBox('', '기다리세요...', '초록색이 되면 클릭!');
                 const delay = 1000 + Math.random() * 2500;
                 goTimer = setTimeout(() => {
@@ -1266,6 +1368,7 @@
                 setBox('early', '너무 빨랐어요!', '다시 클릭해서 도전하세요');
             } else if (state === 'go') {
                 const reaction = Math.round(performance.now() - startTime);
+                lastReactionMs = reaction;
                 state = 'result';
                 let rating = '나쁘지 않아요';
                 if (reaction < 180) rating = '엄청 빠름! ⚡';
@@ -1273,11 +1376,90 @@
                 else if (reaction < 350) rating = '평균';
                 else rating = '느려요 🐢';
                 setBox('', reaction + 'ms', rating + ' · 다시 클릭해서 재도전');
+                submitRow.classList.add('visible');
             }
+        });
+
+        submitBtn.addEventListener('click', () => {
+            const name = nameInput.value.trim();
+            if (!name) {
+                nameInput.focus();
+                return;
+            }
+            if (lastReactionMs == null) return;
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = '등록 중...';
+
+            reactionDb.collection('reaction_scores').add({
+                name: name.slice(0, 10),
+                ms: lastReactionMs,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                submitBtn.textContent = '등록 완료!';
+                nameInput.value = '';
+                if (boardEl.classList.contains('visible')) loadLeaderboard();
+                setTimeout(() => {
+                    submitRow.classList.remove('visible');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = '랭킹 등록';
+                }, 1200);
+            }).catch(() => {
+                submitBtn.textContent = '등록 실패';
+                setTimeout(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = '랭킹 등록';
+                }, 1500);
+            });
+        });
+
+        function loadLeaderboard() {
+            boardEl.innerHTML = '<p style="text-align:center; color: var(--primary-light); margin: 0;">불러오는 중...</p>';
+            reactionDb.collection('reaction_scores')
+                .orderBy('ms', 'asc')
+                .limit(10)
+                .get()
+                .then((snapshot) => {
+                    boardEl.innerHTML = '';
+                    if (snapshot.empty) {
+                        boardEl.innerHTML = '<p style="text-align:center; color: var(--primary-light); margin: 0;">아직 등록된 기록이 없어요</p>';
+                        return;
+                    }
+                    let rank = 1;
+                    snapshot.forEach((doc) => {
+                        const data = doc.data();
+                        const row = document.createElement('div');
+                        row.className = 'reaction-board-row';
+                        const rankSpan = document.createElement('span');
+                        rankSpan.className = 'rank';
+                        rankSpan.textContent = rank + '.';
+                        const nameSpan = document.createElement('span');
+                        nameSpan.textContent = data.name || '익명';
+                        const msSpan = document.createElement('span');
+                        msSpan.textContent = data.ms + 'ms';
+                        row.appendChild(rankSpan);
+                        row.appendChild(nameSpan);
+                        row.appendChild(msSpan);
+                        boardEl.appendChild(row);
+                        rank++;
+                    });
+                })
+                .catch(() => {
+                    boardEl.innerHTML = '<p style="text-align:center; color: var(--primary-light); margin: 0;">랭킹을 불러오지 못했어요</p>';
+                });
+        }
+
+        toggleBoardBtn.addEventListener('click', () => {
+            const willShow = !boardEl.classList.contains('visible');
+            boardEl.classList.toggle('visible');
+            toggleBoardBtn.textContent = willShow ? '🏆 랭킹 닫기' : '🏆 전체 랭킹 보기';
+            if (willShow) loadLeaderboard();
         });
 
         function openReactionOverlay() {
             resetReaction();
+            boardEl.classList.remove('visible');
+            toggleBoardBtn.textContent = '🏆 전체 랭킹 보기';
             overlay.style.display = 'flex';
             requestAnimationFrame(() => overlay.classList.add('visible'));
         }
